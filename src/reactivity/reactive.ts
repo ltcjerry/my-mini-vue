@@ -92,3 +92,16 @@ export function reactive(target: object) {
         reactiveMap
     )
 }
+
+// 辅助函数
+export function isReadonly(value: unknown): boolean {
+    return !!(value && (value as Target)[ReactiveFlags.IS_READONLY])
+}
+
+export function isReactive(value: unknown): boolean {
+    if (isReadonly(value)) {
+        return isReactive((value as Target)[ReactiveFlags.RAW])
+    } else {
+        return !!(value && (value as Target)[ReactiveFlags.IS_REACTIVE])
+    }
+}
