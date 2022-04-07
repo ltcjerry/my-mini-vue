@@ -105,3 +105,8 @@ export function isReactive(value: unknown): boolean {
         return !!(value && (value as Target)[ReactiveFlags.IS_REACTIVE])
     }
 }
+
+export function toRaw<T>(observed: T): T {
+    const raw = observed && (observed as Target)[ReactiveFlags.RAW]
+    return raw ? toRaw(raw) : observed
+}
