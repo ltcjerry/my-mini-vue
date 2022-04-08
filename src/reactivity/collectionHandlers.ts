@@ -96,7 +96,7 @@ function clear(this: IterableCollections) {
     return res
 }
 // 强类型迭代方法
-function createForEach(isReadonly: Boolean, isShallow: Boolean) {
+function createForEach(isReadonly: boolean, isShallow: boolean) {
     return function forEach(this: IterableCollections, callback: Function, thisArg?: unknown) {
         const observed = this as any
         const target = observed[ReactiveFlags.RAW]

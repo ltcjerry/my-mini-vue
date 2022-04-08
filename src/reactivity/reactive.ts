@@ -111,6 +111,6 @@ export function toRaw<T>(observed: T): T {
     return raw ? toRaw(raw) : observed
 }
 
-export function toReactive<T extends object>(value: T): T {
+export function toReactive<T extends unknown>(value: T): T {
     return isObject(value) ? reactive(value) : value
 }
