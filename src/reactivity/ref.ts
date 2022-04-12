@@ -27,6 +27,7 @@ export function triggerRefValue(ref: RefBase<any>) {
     // }
 }
 
+// ref实现类
 class RefImpl<T> {
     private _value: T
     private _rawValue: T
