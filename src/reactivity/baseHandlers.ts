@@ -3,7 +3,9 @@
  * @author jerry
  */
 
-import { hasOwn, isArray, isObject, isSymbl } from "../shared"
+import { hasChanged, hasOwn, isArray, isObject, isSymbl } from "../shared"
+import { track, trigger } from "./effect";
+import { TrackOpTypes, TriggerOpTypes } from "./operations";
 import { reactive, ReactiveFlags, Target, toRaw } from "./reactive"
 
 // 获取全局内置的Symbl对象属性名数组
@@ -73,7 +75,7 @@ function createGetter(isReadonly = false, shallow = false) {
         }
         // 如果不是只可读，就需要进行依赖收集
         if (!isReadonly) {
-            // todo track实现
+            track(target, TrackOpTypes.GET, key)
         }
         // 如果shallow为true表示只为目标对象的最外层数据做一层代理 
         if (shallow) {
@@ -101,8 +103,16 @@ function createSetter(shallow = false) {
         receiver: object
     ): boolean {
         // todo 边界处理
+        let oldvalue = (target as any)[key]
+        const hadKey = isArray(target) ? Number(key) < target.length : hasOwn(target, key)
         const res = Reflect.set(target, key, value, receiver);
-        // todo trigger实现
+        if(target === toRaw(receiver)) {
+            if (!hadKey) {
+                trigger(target, TriggerOpTypes.ADD, key, value)
+            } else if (hasChanged(value, oldvalue)) {
+                trigger(target, TriggerOpTypes.SET, key, value, oldvalue)
+            }
+        }
         return res
     }
 }
