@@ -3,7 +3,8 @@
  * @author jerry
  */
 
-import { hasOwn } from "../shared"
+import { hasChanged, hasOwn } from "../shared"
+import { ITERATE_KEY, track, trigger } from "./effect"
 import { TrackOpTypes, TriggerOpTypes } from "./operations"
 import { ReactiveFlags, toRaw, toReactive } from "./reactive"
 
@@ -20,11 +21,9 @@ function get(target: MapTypes, key: unknown, isReadonly = false, isShallow = fal
     const rawTarget = toRaw(target)
     const rawKey = toRaw(key)
     if (key !== rawKey) {
-        // todo: track实现
-        // !isReadonly && track(rawTarget, TrackOpTypes.GET, key)
+        !isReadonly && track(rawTarget, TrackOpTypes.GET, key)
     } else {
-         // todo: track实现
-       // !isReadonly && track(rawTarget, TrackOpTypes.GET, rawKey) 
+       !isReadonly && track(rawTarget, TrackOpTypes.GET, rawKey) 
     }
     // 其他情况先不考虑，若待返回结果值为Object类型则为其添加代理
     return toReactive(target.get(key)) || toReactive(target.get(rawKey))
@@ -34,19 +33,17 @@ function has(this: CollectionTypes, key: unknown, isReadonly = false): boolean {
     const target = (this as any)[ReactiveFlags.RAW]
     const rawTarget = toRaw(target)
     const rawKey = toRaw(key)
-    // track待实现
     if (key !== rawKey) {
-        // !isReadonly && track(rawTarget, TrackOpTypes.HAS, key)
+        !isReadonly && track(rawTarget, TrackOpTypes.HAS, key)
     } else {
-        // !isReadonly && track(rawTarget, TrackOpTypes.HAS, rawKey)
+        !isReadonly && track(rawTarget, TrackOpTypes.HAS, rawKey)
     }
     return key === rawKey ? target.has(key) : target.has(key) || target.has(rawKey)
 }
 // 强集合类型size方法
 function size(target: IterableCollections, isReadonly = false) {
     target = (target as any)[ReactiveFlags.RAW]
-    // todo: track待实现
-    // !isReadonly && track(toRaw(target), TrackOpTypes.ITERATE, ITERATE_KEY)
+    !isReadonly && track(toRaw(target), TrackOpTypes.ITERATE, ITERATE_KEY)
     return Reflect.get(target, 'size', target)
 }
 // Set类型add方法
@@ -56,8 +53,7 @@ function add(this: SetTypes, value: unknown) {
     // todo：需先判断集合中有没有这个值,先假设没有
     if (true) {
         target.add(value)
-        // todo: trigger实现
-        // trigger(target, TriggerOpTypes.ADD, value, value)
+        trigger(target, TriggerOpTypes.ADD, value, value)
     }
     return this
 }
@@ -66,11 +62,14 @@ function set(this: MapTypes, key: unknown, value: unknown) {
     value = toRaw(value)
     const target = toRaw(this)
     target.set(key, value)
-    if (true) {
-        // todo: trigger待实现
-        // trigger(target, TriggerOpTypes.ADD, key, value)
-    } else if (false) { // 新旧值不同情况
-        // trigger(target, TrackOpTypes.SET, key, value, oldValue)
+    // 假设key值存在
+    const hadKey = true
+    // 暂不考虑新旧值不同情况
+    const oldValue = ''
+    if (hadKey) {
+        trigger(target, TriggerOpTypes.ADD, key, value)
+    } else if (hasChanged(value, oldValue)) { 
+        trigger(target, TriggerOpTypes.SET, key, value, oldValue)
     }
     return this
 }
@@ -78,9 +77,11 @@ function set(this: MapTypes, key: unknown, value: unknown) {
 function deleteEntry(this: CollectionTypes, key: unknown) {
     const target = toRaw(this)
     const res = target.delete(key)
-    if (true) { // 假设key值存在
-        // todo: trigge待实现
-        // trigger(target, TriggerOpTypes.DELETE, key, undefined, oldValue)
+    // 假设key值存在
+    const hadKey = true
+    const oldValue = undefined
+    if (hadKey) {
+        trigger(target, TriggerOpTypes.DELETE, key, undefined, oldValue)
     }
     return res
 }
@@ -90,8 +91,7 @@ function clear(this: IterableCollections) {
     const hadItems  = target.size !== 0
     const res = target.clear()
     if (hadItems) {
-        // todo: trigger待实现
-        // trigger(target, TriggerOpTypes.CLEAR, undefined, undefined, undefined)
+        trigger(target, TriggerOpTypes.CLEAR, undefined, undefined, undefined)
     }
     return res
 }
@@ -101,8 +101,7 @@ function createForEach(isReadonly: boolean, isShallow: boolean) {
         const observed = this as any
         const target = observed[ReactiveFlags.RAW]
         const rawTarget = toRaw(target)
-        // todo: track待实现
-        // !isReadonly && track(rawTarget, TrackOpTypes.ITERATE, ITERATE_KEY)
+        !isReadonly && track(rawTarget, TrackOpTypes.ITERATE, ITERATE_KEY)
         return target.forEach((value: unknown, key: unknown) => {
             return callback.call(thisArg, value, key, observed)
         })

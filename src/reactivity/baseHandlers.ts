@@ -120,13 +120,14 @@ function createSetter(shallow = false) {
 function has(target: object, key: string | symbol): boolean {
     const res = Reflect.has(target, key)
     if (!isSymbl(key) || !builtInSymbols.has(key)) {
-        // track实现
+        track(target, TrackOpTypes.HAS, key)
     }
     return res
 }
 // ownkeys捕获器
 function ownKeys(target: object): (string | symbol)[] {
-    // track实现
+    // ITERATE暂没实现
+    track(target, TrackOpTypes.ITERATE, isArray(target) ? 'length' : 'ITERATE_KEY')
     return Reflect.ownKeys(target)
 }
 // deleteProperty捕获器
@@ -135,7 +136,7 @@ function deleteProperty(target: object, key: string | symbol): boolean {
     const oldVal = (target as any)[key]
     const res = Reflect.deleteProperty(target, key)
     if (hadKey && oldVal) {
-        // trigger实现
+        trigger(target, TriggerOpTypes.DELETE, key, undefined, oldVal)
     }
     return res
 }

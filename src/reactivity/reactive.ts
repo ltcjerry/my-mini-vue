@@ -82,7 +82,8 @@ function createReactiveObject(
     return proxy
 }
 
-
+// 声明的重载函数返回值类型与源码不同，暂时用any替代
+export function reactive<T extends object>(target: T): any
 export function reactive(target: object) {
     return createReactiveObject(
         target, 

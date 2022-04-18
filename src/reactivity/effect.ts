@@ -2,6 +2,10 @@ import { extend, isArray } from "../shared"
 import { createDep, Dep } from "./dep"
 import { TrackOpTypes, TriggerOpTypes } from "./operations"
 
+// 不考虑环境变量
+export const ITERATE_KEY = Symbol('')
+export const MAP_KEY_ITERATE_KEY = Symbol('')
+
 // 记录当前正在执行的effect对象
 export let activeEffect: ReactiveEffect | undefined
 

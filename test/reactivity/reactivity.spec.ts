@@ -38,5 +38,30 @@ describe('测试reactivity模块下的reactive方法', () => {
         expect(isReactive(set)).toBe(true)
 
     })
+    test('代理对象和目标对象应该发生相同的变化', () => {
+        const original: any = {num: 1}
+        const observed = reactive(original)
+        // set
+        observed.other = 2
+        expect(observed.other).toBe(2)
+        expect(original.other).toBe(2)
+        // delete
+        delete observed.num
+        expect('num' in observed).toBe(false)
+        expect('num' in original).toBe(false)
+    })
+    test('给代理对象添加一个类型为Object的值，这个值应该被代理', () => {
+        const observed = reactive<{addKey?: object}>({})
+        const raw = {}
+        observed.addKey = raw
+        expect(observed.addKey).not.toBe(raw)
+        expect(isReactive(observed.addKey)).toBe(true)
+    })
+    test('如果reactive传入的是代理对象，则直接返回这个代理对象', () => {
+        const original = { num: 1 }
+        const observed = reactive(original)
+        const observedNext = reactive(observed)
+        expect(observedNext).toBe(observed)
+    })
 })
 
