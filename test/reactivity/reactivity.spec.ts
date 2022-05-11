@@ -63,5 +63,20 @@ describe('测试reactivity模块下的reactive方法', () => {
         const observedNext = reactive(observed)
         expect(observedNext).toBe(observed)
     })
+    test('多次代理相同的目标对象，预期返回同一代理对象', () => {
+        const original = { num: 1 }
+        const observed = reactive(original)
+        const observed2 = reactive(original)
+        expect(observed).toBe(observed2)
+    })
+    // test("不能使用代理污染原目标对象", () => {
+    //     const original:any = reactive({ num: 1 })
+    //     const original2 = { test: 2 }
+    //     const observed = reactive(original)
+    //     const observed2 = reactive(original2)
+    //     observed.test = observed2
+    //     expect(observed.test).toBe(observed2)
+    //     expect(original.test).toBe(original2)
+    // })
 })
 

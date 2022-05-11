@@ -104,6 +104,9 @@ function createSetter(shallow = false) {
     ): boolean {
         // todo 边界处理
         let oldvalue = (target as any)[key]
+        // 不判断直接将原始值拿出来
+        value = toRaw(value)
+        oldvalue = toRaw(oldvalue)
         const hadKey = isArray(target) ? Number(key) < target.length : hasOwn(target, key)
         const res = Reflect.set(target, key, value, receiver);
         if(target === toRaw(receiver)) {
