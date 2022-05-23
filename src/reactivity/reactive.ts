@@ -51,7 +51,7 @@ export const reactiveMap = new WeakMap<Target, any>()
 export const shallowReactiveMap = new WeakMap<Target, any>()
 export const readonlyMap = new WeakMap<Target, any>()
 export const shallowReadonlyMap = new WeakMap<Target, any>()
-
+// 核心功能就是对一个对象进行代理
 function createReactiveObject(
     target: Target,
     isReadonly: boolean,

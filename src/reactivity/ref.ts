@@ -1,4 +1,6 @@
 import { hasChanged } from "../shared"
+import { createDep } from "./dep"
+import { activeEffect, shouldTrack, trackEffects, triggerEffects } from "./effect"
 import { toRaw, toReactive } from "./reactive"
 
 declare const RefSymbol: unique symbol
@@ -14,17 +16,17 @@ type RefBase<T> = {
 }
 
 export function trackRefValue(ref: RefBase<any>) {
-    // if (shouldTrack && activeEffect) {
-    //     ref = toRaw(ref)
-    //     trackEffects(ref.dep || (ref.dep = createDep()))
-    // }
+    if (shouldTrack && activeEffect) {
+        ref = toRaw(ref)
+        trackEffects(ref.dep || (ref.dep = createDep()))
+    }
 }
 
 export function triggerRefValue(ref: RefBase<any>) {
     ref = toRaw(ref)
-    // if (ref.dep) {
-    //     triggerEffects(ref.dep)
-    // }
+    if (ref.dep) {
+        triggerEffects(ref.dep)
+    }
 }
 
 // ref实现类

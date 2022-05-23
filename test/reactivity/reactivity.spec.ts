@@ -3,7 +3,7 @@
  * @author jerry
  */
 
-import { isReactive, reactive } from "../../src/reactivity/reactive";
+import { isReactive, reactive } from "reactivity/reactive";
 
 describe('测试reactivity模块下的reactive方法', () => {
     test('普通对象类型object', () => {
@@ -69,14 +69,5 @@ describe('测试reactivity模块下的reactive方法', () => {
         const observed2 = reactive(original)
         expect(observed).toBe(observed2)
     })
-    // test("不能使用代理污染原目标对象", () => {
-    //     const original:any = reactive({ num: 1 })
-    //     const original2 = { test: 2 }
-    //     const observed = reactive(original)
-    //     const observed2 = reactive(original2)
-    //     observed.test = observed2
-    //     expect(observed.test).toBe(observed2)
-    //     expect(original.test).toBe(original2)
-    // })
 })
 
