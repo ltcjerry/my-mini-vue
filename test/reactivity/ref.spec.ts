@@ -6,12 +6,12 @@
 import { effect } from "reactivity/effect"
 import { ref } from "reactivity/ref"
 
-describe('测试reactivity模块下的ref方法', () => {
-    it('调用ref函数返回一个对象包含value属性', () => {
+describe('测试ref', () => {
+    it('结果包含value属性', () => {
         const test = ref(1)
         expect(test.value).toBe(1)
     })
-    it('可以被监听', () => {
+    it('能够响应数据', () => {
         const num = ref(1)
         let temp, calls = 0
         effect(() => {
@@ -26,5 +26,12 @@ describe('测试reactivity模块下的ref方法', () => {
         // 相同值不会触发依赖响应
         num.value = 2
         expect(calls).toBe(2)
+    })
+    it('能够处理普通对象类型', () => {
+        const obj = ref({ count: 1})
+        let temp
+        effect(() => {
+            temp = obj.value.count
+        })
     })
 })
