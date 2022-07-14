@@ -3,7 +3,7 @@
  * @author jerry
  */
 
-import { isReactive, reactive } from "reactivity/reactive";
+import { isReactive, reactive } from "../../src/reactivity/reactive";
 
 describe('测试reactivity模块下的reactive方法', () => {
     test('普通对象类型object', () => {

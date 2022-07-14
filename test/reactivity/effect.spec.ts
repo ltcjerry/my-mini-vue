@@ -1,5 +1,5 @@
-import { effect } from "reactivity/effect"
-import { reactive } from "reactivity/reactive"
+import { effect } from "../../src/reactivity/effect"
+import { reactive } from "../../src/reactivity/reactive"
 
 describe('reactivity/effect', () => {
     it('向effect函数传入一个自定义函数，只执行一次', () => {
