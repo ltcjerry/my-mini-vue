@@ -3,7 +3,7 @@
  * @author jerry
  */
 
-import { effect, trigger } from "../../src/reactivity/effect"
+import { effect } from "../../src/reactivity/effect"
 import { customRef, isRef, ref } from "../../src/reactivity/ref"
 
 describe('测试ref', () => {

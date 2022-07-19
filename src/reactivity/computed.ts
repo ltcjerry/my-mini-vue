@@ -3,6 +3,18 @@ import { ReactiveEffect, track } from "./effect"
 import { ReactiveFlags, toRaw } from "./reactive"
 import { trackRefValue, triggerRefValue } from "./ref"
 
+declare const ComputedRefSymbol: unique symbol
+
+export interface ComputedRef<T = any> extends WritableComputedRef<T> {
+    readonly value: T
+    [ComputedRefSymbol]: true
+}
+
+export interface WritableComputedRef<T> {
+    value: T
+    readonly effect: ReactiveEffect<T>
+}
+
 export type ComputedGetter<T> = (...arg: any[]) => T
 export type ComputedSetter<T> = (v: T) => void
 
@@ -47,4 +59,23 @@ export class ComputedRefImpl<T> {
     set value(newValue: T) {
         this._setter(newValue)
     }
+}
+
+export function computed<T>(getter: ComputedGetter<T>): ComputedRef<T>
+export function computed<T>(options: WritableComputedOptions<T>): WritableComputedRef<T>
+export function computed<T>(
+    getterOrOptions: ComputedGetter<T> | WritableComputedOptions<T>
+) {
+    let getter: ComputedGetter<T>
+    let setter: ComputedSetter<T>
+    const onlyGetter = typeof getterOrOptions === 'function'
+    if (onlyGetter) {
+        getter = getterOrOptions
+        setter = () => {}
+    } else {
+        getter = getterOrOptions.get
+        setter = getterOrOptions.set
+    }
+    const cRef = new ComputedRefImpl(getter, setter, onlyGetter || !setter, false)
+    return cRef as any
 }
