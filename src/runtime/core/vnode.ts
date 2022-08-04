@@ -35,7 +35,9 @@ function createBaseVNode(
         el: null,
         shapeFlag,
         patchFlag,
-        dynamicProps
+        dynamicProps,
+        dynamicChildren: null,
+        appContext: null
     }
 
     if (needFullChildrenNoralization) {
@@ -69,18 +71,18 @@ function _createVNode(
     isBlockNode = false
 ) {
 
-    if (isVNode(type)) {
-        // 拷贝VNode
-        const cloned = {patchFlag: 0}
-        if (children) {
-            // 处理children
-        }
-        if (!isBlockNode) {
-            // 块处理
-        }
-        cloned.patchFlag |= PatchFlags.BAIL
-        return cloned
-    }
+    // if (isVNode(type)) {
+    //     // 拷贝VNode
+    //     const cloned = {patchFlag: 0}
+    //     if (children) {
+    //         // 处理children
+    //     }
+    //     if (!isBlockNode) {
+    //         // 块处理
+    //     }
+    //     cloned.patchFlag |= PatchFlags.BAIL
+    //     return cloned
+    // }
     // class component
     if (typeof type === 'function' && '__vccOpts' in type) {
         type = type?.__vccOpts

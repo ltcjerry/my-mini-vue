@@ -1,4 +1,5 @@
 import { ShapeFlags } from "shared/shapeFlags"
+import { createAppAPI } from "./apiCreateApp"
 
 export type RootRenderFunction<HostElement = RendererElement> = (
     Vnode: any | null,
@@ -67,11 +68,53 @@ function baseCreateRenderer(options: RendererOptions): any {
         insertStaticContent: hostInsetStaticContent
     } = options
 
-    const patch = (
+    const patch = () => {}
 
-    ) => {
+    const processText = () => {}
 
-    }
+    const processCommentNode = () => {}
+
+    const mountStaticNode = () => {}
+
+    const patchStaticNode = () => {}
+
+    const moveStaticNode = () => {}
+
+    const removeStaticNode = () => {}
+
+    const processElement = () => {}
+
+    const mountElement = () => {}
+
+    const setScopeid = () => {}
+
+    const mountChildren = () => {}
+
+    const patchElement = () => {}
+
+    const patchBlockChildren = () => {}
+
+    const patchProps = () => {}
+
+    const processFragment = () => {}
+
+    const processComponent = () => {}
+
+    const mountComponent = () => {}
+
+    const updateComponent = () => {}
+
+    const setupRenderEffect = () => {}
+
+    const updateComponentPreRender = () => {}
+
+    const patchChildren = () => {}
+
+    const patchUnkeyedChildren = () => {}
+
+    const patchKeyedChildren = () => {}
+
+    const move = () => {}
 
     const unmount = (
         vnode: any,
@@ -103,10 +146,23 @@ function baseCreateRenderer(options: RendererOptions): any {
         if (shouldInvokeVnodeHook && (vnodeHook = props && props.onVnodeBeforeUnmount)) {}
     }
 
+    const remove = () => {}
+
+    const removeFragment = () => {}
+
+    const unmountComponent = () => {}
+
+    const unmountChildren = () => {}
+
+    const getNextHostNode = (vnode: any) => {
+
+    }
+
     const render: RootRenderFunction = (vnode, container, isSVG) => {
         if (vnode == null) {
+            // 卸载
             if (container._vnode) {
-                // unmount(container._vnode, null, null, true)
+                unmount(container._vnode, null, null, true)
             }
         } else {
             // patch(container._vnode || null, vnode, container, null, null, isSVG)
@@ -114,8 +170,10 @@ function baseCreateRenderer(options: RendererOptions): any {
         // flushPostFlushCbs()
         container._vnode = vnode
     }
+    let hydrate
 
     return {
-        render
+        render,
+        createApp: createAppAPI(render, hydrate)
     }
 }

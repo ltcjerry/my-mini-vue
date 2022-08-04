@@ -18,3 +18,21 @@ export const hasChanged = (value: unknown, oldValue: unknown): boolean => !Objec
 
 // 合并两个对象
 export const extend = Object.assign
+
+export const cacheStringFunction = <T extends (str: string) => string>(fn: T): T => {
+    const cache: Record<string, string> = Object.create(null)
+    return ((str: string) => {
+        const hit = cache[str]
+        return hit || (cache[str] = fn(str))
+    }) as any
+}
+
+export const capitalize = cacheStringFunction((str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+})
+
+export const toHandlerKey = cacheStringFunction((str: string) => {
+    return str ? `on${capitalize(str)}` : ''
+})
+
+export const isFunction = (val: unknown): val is Function => typeof val === 'function'
